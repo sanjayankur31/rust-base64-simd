@@ -12,8 +12,16 @@ Summary:        SIMD-accelerated base64 encoding and decoding
 License:        MIT
 URL:            https://crates.io/crates/base64-simd
 Source:         %{crates_source}
+# * https://github.com/Nugine/simd/commit/c6540229a0f02c14eedfa4ed8694815cd6410ba7
+Source10:       https://github.com/Nugine/simd/raw/refs/tags/v%{version}/LICENSE
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          base64-simd-fix-metadata-auto.diff
+# Manually created patch for downstream crate metadata changes
+# * Update dev deps base64 and const-str to Fedora versions (0.22.1, 0.6.2)
+Patch:          base64-simd-fix-metadata.diff
+# * Bits specific to tests/it.rs from upstream commit:
+#   https://github.com/Nugine/simd/commit/53a567aaac3a17a8203da2ae7387b7347af32119
+Patch5:         0001-update-test-for-new-version-of-base64.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -32,7 +40,7 @@ This package contains library source intended for building other packages which
 use the "%{crate}" crate.
 
 %files          devel
-# FIXME: no license files detected
+%license %{crate_instdir}/LICENSE
 %doc %{crate_instdir}/README.md
 %{crate_instdir}/
 
@@ -99,6 +107,7 @@ use the "unstable" feature of the "%{crate}" crate.
 %prep
 %autosetup -n %{crate}-%{version} -p1
 %cargo_prep
+cp -p '%{SOURCE10}' .
 
 %generate_buildrequires
 %cargo_generate_buildrequires

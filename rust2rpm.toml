@@ -1,0 +1,29 @@
+[package]
+cargo-toml-patch-comments = [
+  """\
+  Update dev deps base64 and const-str to Fedora versions (0.22.1, 0.6.2)
+  """,
+]
+license-files.include = [
+  "LICENSE",
+]
+[[package.extra-patches]]
+number = 5
+file = "0001-update-test-for-new-version-of-base64.patch"
+comments = [
+    """\
+    Bits specific to tests/it.rs from upstream commit:
+    https://github.com/Nugine/simd/commit/53a567aaac3a17a8203da2ae7387b7347af32119\
+    """
+]
+[[package.extra-sources]]
+number = 10
+file = "https://github.com/Nugine/simd/raw/refs/tags/v%{version}/LICENSE"
+comments = [
+  "https://github.com/Nugine/simd/commit/c6540229a0f02c14eedfa4ed8694815cd6410ba7"
+]
+[scripts]
+prep.post = [
+  "cp -p '%{SOURCE10}' ."
+]
+
